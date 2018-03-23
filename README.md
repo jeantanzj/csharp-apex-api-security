@@ -6,6 +6,7 @@
 A C# helper utility that construct and sign HTTP Authorization header scheme for API authentication and verification
 
 ## Table of Contents
+- [Fork changes](#fork-changes)
 - [Getting Started](#getting-started)
     * [Prerequisites](#prerequisites)
     * [APIList Interface](#using-the-apilist-class)
@@ -17,6 +18,38 @@ A C# helper utility that construct and sign HTTP Authorization header scheme for
 - [Contributing](#contributing)
 - [License](#license)
 - [References](#references)
+
+## Fork Changes
+** 2018-03-23 **
+- The following changes were made to be able to build, and run in my environment
+
+```
+.NET Command Line Tools (2.1.101)
+
+Product Information:
+ Version:            2.1.101
+ Commit SHA-1 hash:  6c22303bf0
+
+Runtime Environment:
+ OS Name:     Mac OS X
+ OS Version:  10.13
+ OS Platform: Darwin
+ RID:         osx.10.12-x64
+ Base Path:   /usr/local/share/dotnet/sdk/2.1.101/
+
+Microsoft .NET Core Shared Framework Host
+
+  Version  : 2.0.6
+  Build    : 74b1c703813c8910df5b96f304b0f2b78cdf194d
+```
+
+- Cast to `RSA` instead of `RSACryptoServiceProvider`. Corresponding code and tests were modified
+- Target framework was changed to `netcoreapp2.0`
+- Test framework setup:
+    * Microsoft.NET.Test.Sdk 15.6.1
+    * NUnit 3.9.0
+    * NUnit3TestAdapter 3.9.0
+- To run tests: `dotnet test`
 
 ## Getting Started
 
