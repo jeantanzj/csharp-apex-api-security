@@ -24,7 +24,7 @@ namespace ApiUtilLibTest
 
 		const string passphrase = "passwordp12";
 
-		static RSACryptoServiceProvider privateKey = ApiAuthorization.PrivateKeyFromP12(privateCertNameP12, passphrase);
+		static RSA privateKey = ApiAuthorization.PrivateKeyFromP12(privateCertNameP12, passphrase);
 
 		const string realm = "http://example.api.test/token";
 		const string authPrefixL1 = "api_prefix_l1";

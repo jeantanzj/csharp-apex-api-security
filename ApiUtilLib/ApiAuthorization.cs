@@ -65,7 +65,7 @@ namespace ApiUtilLib
             return signatureValid;
         }
 
-        public static string L2Signature(this string message, RSACryptoServiceProvider privateKey)
+        public static string L2Signature(this string message, RSA privateKey)
         {
             Logger.LogEnter(LoggerBase.Args(message, privateKey));
 
@@ -86,50 +86,49 @@ namespace ApiUtilLib
 			byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
             string base64Token = null;
-            using (SHA256Managed sha256 = new SHA256Managed())
-            {
-                byte[] signatureBytes = privateKey.SignData(messageBytes, sha256);
+           
+            byte[] signatureBytes = privateKey.SignData(messageBytes, HashAlgorithmName.SHA256 , RSASignaturePadding.Pkcs1);
 
-                base64Token = Convert.ToBase64String(signatureBytes);
-            }
+            base64Token = Convert.ToBase64String(signatureBytes);
 
             Logger.LogExit(LoggerBase.Args(base64Token));
             return base64Token;
         }
 
-        public static RSACryptoServiceProvider PrivateKeyFromP12(string certificateFileName, string password)
+        public static RSA PrivateKeyFromP12(string certificateFileName, string password)
         {
             Logger.LogEnterExit(LoggerBase.Args(certificateFileName, "***password***"));
 
             var privateCert = new X509Certificate2(System.IO.File.ReadAllBytes(certificateFileName), password, X509KeyStorageFlags.Exportable);
 
-            var OriginalPrivateKey = (RSACryptoServiceProvider)privateCert.PrivateKey;
-
             // Transfer the private key to overcome the following error...
             // System.Security.Cryptography.CryptographicException "Invalid algorithm specified"
             if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
             {
+                var OriginalPrivateKey = (RSA) privateCert.PrivateKey;
                 return OriginalPrivateKey;
             }
             else
             {
+
+                var OriginalPrivateKey = (RSACryptoServiceProvider) privateCert.PrivateKey;
                 var privateKey = new RSACryptoServiceProvider();
                 privateKey.ImportParameters(OriginalPrivateKey.ExportParameters(true));
 
-                return privateKey;
+                return (RSA) privateKey;
             }
         }
 
-        public static RSACryptoServiceProvider PublicKeyFromCer(string certificateFileName)
+        public static RSA PublicKeyFromCer(string certificateFileName)
         {
             Logger.LogEnterExit(LoggerBase.Args(certificateFileName));
 
             var privateCert = new X509Certificate2(System.IO.File.ReadAllBytes(certificateFileName));
 
-            return (RSACryptoServiceProvider)privateCert.PublicKey.Key;
+            return (RSA)privateCert.PublicKey.Key;
         }
 
-        public static bool VerifyL2Signature(this string signature, RSACryptoServiceProvider publicKey, string message)
+        public static bool VerifyL2Signature(this string signature, RSA publicKey, string message)
         {
             Logger.LogEnter(LoggerBase.Args(signature, message, publicKey));
 
@@ -141,7 +140,8 @@ namespace ApiUtilLib
             {
                 byte[] messageHash = sha256.ComputeHash(messageBytes);
 
-                signatureValid = publicKey.VerifyHash(messageHash, CryptoConfig.MapNameToOID("SHA256"), signatureBytes);
+                //signatureValid = publicKey.VerifyHash(messageHash, CryptoConfig.MapNameToOID("SHA256"), signatureBytes);
+                signatureValid = publicKey.VerifyHash(messageHash, signatureBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             }
 
             Logger.LogExit(LoggerBase.Args(signatureValid));
@@ -247,7 +247,7 @@ namespace ApiUtilLib
             , string appId
             , string secret = null
             , ApiList formList = null
-            , RSACryptoServiceProvider privateKey = null
+            , RSA privateKey = null
             , string nonce = null
             , string timestamp = null
             , string version = "1.0")

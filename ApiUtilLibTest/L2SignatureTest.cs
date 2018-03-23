@@ -19,8 +19,8 @@ namespace ApiUtilLibTest
 		const string baseString = "message";
 		const string password = "passwordp12";
 
-		static readonly RSACryptoServiceProvider privateKey = ApiAuthorization.PrivateKeyFromP12(privateCertName, password);
-		static readonly RSACryptoServiceProvider publicKey = ApiAuthorization.PublicKeyFromCer(publicCertName);
+		static readonly RSA privateKey = ApiAuthorization.PrivateKeyFromP12(privateCertName, password);
+		static readonly RSA publicKey = ApiAuthorization.PublicKeyFromCer(publicCertName);
 
 		static string GetLocalPath(string relativeFileName)
 		{
@@ -124,7 +124,7 @@ namespace ApiUtilLibTest
 			}
 		}
 
-		public static void L2Test(string baseString, RSACryptoServiceProvider privateKey, string expectedSignature, string message)
+		public static void L2Test(string baseString, RSA privateKey, string expectedSignature, string message)
 		{
 			var signature = baseString.L2Signature(privateKey);
 
