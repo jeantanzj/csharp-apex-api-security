@@ -41,3 +41,9 @@ NUnit3TestAdapter-3.8.0.vsix
 
 # dotCover
 *.dotCover
+
+# credentials
+*.config*
+!cert/example.p12
+cert/*
+.vscode
