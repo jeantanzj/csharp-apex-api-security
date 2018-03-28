@@ -99,24 +99,10 @@ namespace ApiUtilLib
         {
             Logger.LogEnterExit(LoggerBase.Args(certificateFileName, "***password***"));
 
-            var privateCert = new X509Certificate2(System.IO.File.ReadAllBytes(certificateFileName), password, X509KeyStorageFlags.Exportable);
-
-            // Transfer the private key to overcome the following error...
-            // System.Security.Cryptography.CryptographicException "Invalid algorithm specified"
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                var OriginalPrivateKey = (RSA) privateCert.PrivateKey;
-                return OriginalPrivateKey;
-            }
-            else
-            {
-
-                var OriginalPrivateKey = (RSACryptoServiceProvider) privateCert.PrivateKey;
-                var privateKey = new RSACryptoServiceProvider();
-                privateKey.ImportParameters(OriginalPrivateKey.ExportParameters(true));
-
-                return (RSA) privateKey;
-            }
+            var bytes = System.IO.File.ReadAllBytes(certificateFileName);
+            var privateCert = new X509Certificate2(bytes, password, X509KeyStorageFlags.Exportable);
+            var OriginalPrivateKey = (RSA) privateCert.PrivateKey;
+            return OriginalPrivateKey;
         }
 
         public static RSA PublicKeyFromCer(string certificateFileName)
