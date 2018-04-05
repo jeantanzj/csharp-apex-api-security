@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <ProjectConfigFileName>App.config</ProjectConfigFileName>
+     <ProjectConfigFileName>App.config</ProjectConfigFileName>
   </PropertyGroup>
-  <ItemGroup>
-     <None Update="cert/example.p12" CopyToOutputDirectory="PreserveNewest" TargetPath="cert/example.p12"/> 
+<ItemGroup>
+     <!-- <None Update="cert/example.p12" CopyToOutputDirectory="PreserveNewest" TargetPath="cert/example.p12"/>  -->
      <None Include="App.config" />
-     <!-- <Content Include="/Users/my/externaldir/Certificates/*.*" 
-     Link="cert/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" /> -->
+     <Content Include="/Users/Jean/Development/Certificates/*.*" Link="cert/%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
   </ItemGroup>
   <ItemGroup>
